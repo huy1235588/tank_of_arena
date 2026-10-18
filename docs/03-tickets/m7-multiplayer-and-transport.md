@@ -12,6 +12,7 @@ Decouple `Client` from direct `Simulation` method calls by introducing a `Transp
 **Status:** `blocked`
 
 ### Acceptance Criteria
+
 - [ ] With `latencyMs = 0`, `LocalTransport` behaves identically to direct in-memory `Simulation` execution.
 - [ ] With `latencyMs = 50` and `snapshotRateHz = 20`, `Client` receives delayed snapshots and events through the asynchronous `Transport` queue without importing `Simulation` inside `Renderer` or `InputController`.
 
@@ -27,6 +28,7 @@ Implement `Simulation.getSnapshotForTeam(viewerTeam)` per [ADR 007](../01-adr/00
 **Status:** `blocked`
 
 ### Acceptance Criteria
+
 - [ ] When an enemy tank on Team 2 enters a `bush` or activates `stealth` at distance `> 2.5` from all Team 1 tanks, `getSnapshotForTeam(1).tanks` does not contain that enemy tank's ID or coordinates.
 - [ ] As soon as a Team 1 tank moves within `<= 2.5` units or the hidden enemy fires (`breakOnFire`), the enemy tank reappears in `getSnapshotForTeam(1).tanks`.
 
@@ -42,6 +44,7 @@ Create `src/server/main.ts` running `Simulation` authoritatively at 60Hz on Node
 **Status:** `blocked`
 
 ### Acceptance Criteria
+
 - [ ] `src/server/` imports and runs `src/sim/Simulation.ts` directly in Node.js with zero browser shims.
 - [ ] Two browser tabs connected to the local Node.js server can play a complete 1v1 or 2v2 match with synchronized kills, deaths, and destructible brick states.
 
@@ -57,5 +60,6 @@ Eliminate perceived input lag under `100ms` network RTT by predicting the local 
 **Status:** `blocked`
 
 ### Acceptance Criteria
+
 - [ ] Under `100ms` simulated RTT (`50ms` each way), local tank WASD movement and turret aiming respond on the immediate render frame with zero rubber-banding during normal wall sliding.
 - [ ] When an authoritative server event alters the local tank's position (e.g., Tank–Tank collision push or respawn), the client reconciles by re-simulating unacknowledged `InputCmd`s from the server tick forward without visual teleport snapping.

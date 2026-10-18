@@ -7,23 +7,23 @@ Authoritative guide for AI Agents working in this repository. Read [`GLOSSARY.md
 ## 1. Iron Rules
 
 1. **Pure & Deterministic Simulation (`src/sim/`, `src/shared/`):**
-   - Pure TypeScript only. Never import `pixi.js`, DOM (`window`, `document`, `HTMLElement`), Web Audio, `Math.random()`, `Date.now()`, or `performance.now()`.
-   - Source all randomness from the seeded `Rng` (`src/shared/rng.ts`). Measure simulation time in integer `tick`s or multiples of `STEP = 1/60`. Enforced automatically by `tests/sim-purity.test.ts`.
+    - Pure TypeScript only. Never import `pixi.js`, DOM (`window`, `document`, `HTMLElement`), Web Audio, `Math.random()`, `Date.now()`, or `performance.now()`.
+    - Source all randomness from the seeded `Rng` (`src/shared/rng.ts`). Measure simulation time in integer `tick`s or multiples of `STEP = 1/60`. Enforced automatically by `tests/sim-purity.test.ts`.
 2. **Unidirectional Data Flow:**
-   - `InputCmd[]` enters `Simulation.step(inputs)` → mutates state inside `World` → emits a read-only `Snapshot` and discrete `GameEvent[]`.
-   - `Renderer` only reads `Snapshot` to interpolate by `alpha` and consumes `GameEvent[]` to trigger audio/VFX; it never mutates game state or holds gameplay rules.
+    - `InputCmd[]` enters `Simulation.step(inputs)` → mutates state inside `World` → emits a read-only `Snapshot` and discrete `GameEvent[]`.
+    - `Renderer` only reads `Snapshot` to interpolate by `alpha` and consumes `GameEvent[]` to trigger audio/VFX; it never mutates game state or holds gameplay rules.
 3. **Zero Allocation in Hot Loops (60Hz Sim & Render Frame):**
-   - Avoid temporary object/array allocations (`new`, `.map()`, `.filter()`, `{...}`) inside `step()` and `draw()` at scale.
-   - **Double-Buffered Snapshot:** Reuse two pre-allocated buffers (`prevSnapshot` and `currSnapshot`) for reading and interpolation without creating Garbage Collector (GC) pressure.
-   - **SoA Pool & VfxPool:** Store projectiles and VFX particles in fixed-capacity typed arrays (`Float32Array`/`Uint16Array`) or pre-allocated object pools backed by a free-list and Generational IDs.
-   - **PIXI `generateTexture`:** Bake procedural `PIXI.Graphics` geometry for tanks, projectiles, and tiles into `PIXI.Texture`s once at startup; update only `PIXI.Sprite` transforms (`position`, `rotation`, `alpha`) per frame instead of issuing vector draw calls.
+    - Avoid temporary object/array allocations (`new`, `.map()`, `.filter()`, `{...}`) inside `step()` and `draw()` at scale.
+    - **Double-Buffered Snapshot:** Reuse two pre-allocated buffers (`prevSnapshot` and `currSnapshot`) for reading and interpolation without creating Garbage Collector (GC) pressure.
+    - **SoA Pool & VfxPool:** Store projectiles and VFX particles in fixed-capacity typed arrays (`Float32Array`/`Uint16Array`) or pre-allocated object pools backed by a free-list and Generational IDs.
+    - **PIXI `generateTexture`:** Bake procedural `PIXI.Graphics` geometry for tanks, projectiles, and tiles into `PIXI.Texture`s once at startup; update only `PIXI.Sprite` transforms (`position`, `rotation`, `alpha`) per frame instead of issuing vector draw calls.
 4. **AI Tick Staggering:**
-   - `BotBrain` runs at 10Hz (every 6 ticks) staggered across ticks via `tick % 6 === botIndex % 6`. Between decision ticks, bots reuse their cached `InputCmd`; never execute A* pathfinding for all bots on the same tick.
+    - `BotBrain` runs at 10Hz (every 6 ticks) staggered across ticks via `tick % 6 === botIndex % 6`. Between decision ticks, bots reuse their cached `InputCmd`; never execute A* pathfinding for all bots on the same tick.
 5. **Strictly Data-Driven Content (`data/`):**
-   - Tanks (`TankDef`), skills (`SkillDef`), projectiles (`ProjectileDef`), terrain tiles (`TileDef`), and ASCII maps (`MapDef`) live exclusively in `data/*.json`. Adding new content requires editing JSON only; touch `src/sim/effects/` only when introducing a new atomic `EffectDef` behavior.
+    - Tanks (`TankDef`), skills (`SkillDef`), projectiles (`ProjectileDef`), terrain tiles (`TileDef`), and ASCII maps (`MapDef`) live exclusively in `data/*.json`. Adding new content requires editing JSON only; touch `src/sim/effects/` only when introducing a new atomic `EffectDef` behavior.
 6. **Spatial & Geometric Invariants:**
-   - `1 world unit = 1 map tile`. Angles are in radians normalized to `(-π, π]`, where `0` points along `+x` (right) and `+π/2` points along `+y` (down).
-   - Tank hitbox radius must satisfy `radius <= 1.0` (invariant required by `SpatialHash` and Circle–AABB wall sliding).
+    - `1 world unit = 1 map tile`. Angles are in radians normalized to `(-π, π]`, where `0` points along `+x` (right) and `+π/2` points along `+y` (down).
+    - Tank hitbox radius must satisfy `radius <= 1.0` (invariant required by `SpatialHash` and Circle–AABB wall sliding).
 
 ## 2. Verification & Build Commands
 

@@ -1,9 +1,9 @@
 {
-  "id": "bullet_basic",
-  "speed": 16,
-  "damage": 25,
-  "range": 12,
-  "radius": 0.12,
-  "wallDamage": 1,
-  "color": "#ffd54f"
+    "id": "bullet_basic",
+    "speed": 16,
+    "damage": 25,
+    "range": 12,
+    "radius": 0.12,
+    "wallDamage": 1,
+    "color": "#ffd54f"
 }

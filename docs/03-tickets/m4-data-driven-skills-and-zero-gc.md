@@ -12,6 +12,7 @@ Refactor `Simulation` snapshot generation and projectile storage to eliminate pe
 **Status:** `ready-for-agent`
 
 ### Acceptance Criteria
+
 - [ ] `ProjectilePool` allocates and frees projectile slots in $O(1)$ using typed arrays (`Float32Array` / `Uint16Array`) and increments the slot's `generation` on free.
 - [ ] `Simulation.step()` mutates pre-allocated `TankSnapshot`, `ProjectileSnapshot`, and `PlayerSnapshot` slots inside the active buffer of `DoubleSnapshotBuffer` without creating new arrays per tick.
 - [ ] Stress test: spawning and sweeping 500 concurrent projectiles for 600 ticks (10 simulated seconds) completes in `< 150ms` in headless Vitest with zero unhandled pool overflow errors.
@@ -28,6 +29,7 @@ Eliminate per-frame `PIXI.Graphics` vector re-tessellation in `Renderer` and `Ef
 **Status:** `ready-for-agent`
 
 ### Acceptance Criteria
+
 - [ ] `SpriteFactory` bakes procedural `Graphics` into cached `PIXI.Texture`s once at initialization and destroys the temporary `Graphics` objects immediately.
 - [ ] `Renderer.drawProjectiles()` and `EffectSystem.updateAndDraw()` update pooled `PIXI.Sprite` transforms (`position`, `rotation`, `scale`, `alpha`, `tint`) instead of calling `Graphics.circle()` / `Graphics.stroke()` per frame.
 - [ ] When `VfxPool` reaches capacity during a massive explosion burst, new particle requests are silently dropped or overwrite the oldest slot without growing the array.
@@ -44,6 +46,7 @@ Extend `ProjectileDef`, `validateProjectileDef`, and `sweepProjectile` (`raycast
 **Status:** `blocked`
 
 ### Acceptance Criteria
+
 - [ ] `raycastTiles` returns the hit axis/normal (`normalX`, `normalY`) in addition to `(t, col, row)`.
 - [ ] When a projectile with `bouncesRemaining > 0` hits a blocking tile, its direction vector reflects across the hit normal, `bouncesRemaining` decrements by `1`, `ProjectileHit { kind: "wall" }` is emitted for spark VFX, and the remaining segment $(1 - t) \cdot \text{step}$ is swept in the same tick.
 - [ ] When a projectile with `pierceRemaining > 0` hits an enemy tank, it applies damage, records the target ID in its hit-ignore list so it cannot damage the same tank again on the next tick, decrements `pierceRemaining`, and continues flying.
@@ -60,6 +63,7 @@ Add `data/skills/*.json` loading and cross-reference validation (`validateSkillD
 **Status:** `blocked`
 
 ### Acceptance Criteria
+
 - [ ] `validateContentRefs` fails fast at startup if any `TankDef.skills` entry references a missing `SkillDef.id` or if any `spawnProjectile` effect references a missing `ProjectileDef.id`.
 - [ ] Pressing `Q`, `E`, or `Space` (`InputCmd.skills` bitmask) when slot $k$ has `cooldownTicks === 0` executes `skillDef.effects` sequentially and sets `cooldownTicks = Math.round(skillDef.cooldown * TICK_RATE)`.
 - [ ] `spawnProjectile` with `count > 1` and `spreadDeg > 0` spawns a symmetric fan of projectiles centered on `turret.angle`.
@@ -77,6 +81,7 @@ Implement the `dash`, `shield`, and `stealth` handlers in `EFFECT_REGISTRY` and 
 **Status:** `blocked`
 
 ### Acceptance Criteria
+
 - [ ] **`dash`:** Moves the tank `distance` units over `durationTicks` in sub-steps $\le 0.5 \times \text{radius}$ calling `resolveCircleTiles` at each sub-step; a dashing tank never tunnels through a 1-tile wall. Optional `invulnerable: true` prevents damage during the dash.
 - [ ] **`shield`:** Absorbs up to `amount` mitigated damage before `Health.hp` is reduced, expiring after `durationTicks` or when depleted.
 - [ ] **`stealth`:** Sets `TankSnapshot.stealthed = true`; if `breakOnFire === true`, firing in `weaponSystem` immediately removes the stealth status.
@@ -94,6 +99,7 @@ Support `onHit` and `onExpire` effect chains on `ProjectileDef` (e.g., cluster b
 **Status:** `blocked`
 
 ### Acceptance Criteria
+
 - [ ] When a projectile with `onExpire` or `onHit` effects terminates, `executeEffects` runs at the projectile's impact/expiration coordinates `(x, y)`.
 - [ ] At least 4 playable tanks exist in `data/tanks/*.json` covering all 4 roles (`tank`, `assassin`, `support`, `sniper`).
 - [ ] Adding a 5th tank JSON file in `data/tanks/` works end-to-end in the game and tests with **zero changes to `src/`**.

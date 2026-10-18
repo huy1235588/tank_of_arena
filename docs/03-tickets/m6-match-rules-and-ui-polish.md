@@ -12,6 +12,7 @@ Add match lifecycle rules to `Simulation`: a pre-match countdown (`COUNTDOWN_TIC
 **Status:** `blocked`
 
 ### Acceptance Criteria
+
 - [ ] During `Countdown`, `movementSystem`, `weaponSystem`, and `statusAndSkillSystem` ignore movement/fire inputs while `aimSystem` still rotates turrets.
 - [ ] When `teamKills[team] >= scoreLimit` or `matchTimerTicks === 0`, `Snapshot.match` transitions to `phase: "Ended"` with the winning team ID (`0` for draw), and further combat damage/spawns halt.
 
@@ -27,6 +28,7 @@ Implement the browser UI flow in `src/client/ui/` allowing players to choose the
 **Status:** `blocked`
 
 ### Acceptance Criteria
+
 - [ ] Player can complete a full loop: `Menu → TankSelect → Match (Countdown → Playing → Ended) → Result → TankSelect` without page reloads or PixiJS memory leaks (`Renderer.destroy()` cleans up all GPU resources).
 - [ ] `TankSelect` dynamically lists all tanks loaded from `data/tanks/*.json` and all maps from `data/maps/*.json`.
 
@@ -42,6 +44,7 @@ Add combat feel and spatial awareness features to `src/client/`: trauma-based ca
 **Status:** `blocked`
 
 ### Acceptance Criteria
+
 - [ ] Camera screen shake decays smoothly to zero and never alters world-space mouse aiming (`screenToWorld` uses the unshaken camera center or accounts for offset cleanly).
 - [ ] Minimap only renders enemy tanks that are visible to the local player's team (`ADR 007`).
 - [ ] All 3 maps (`arena_01`, `crossfire`, `fortress`) pass `validateMapDef` and support 3v3 spawns.
@@ -58,4 +61,5 @@ Implement a lightweight `ReplayRecorder` that captures `{ config: SimConfig, inp
 **Status:** `blocked`
 
 ### Acceptance Criteria
+
 - [ ] Replaying a recorded 1,800-tick (30-second) 3v3 match produces the exact same `Snapshot` (tank positions, angles, HP, kills, deaths, and tile states) at the final tick as the live match.

@@ -14,13 +14,13 @@ npm run build      # Typecheck + production bundle
 
 ## Controls
 
-| Input | Action |
-| :--- | :--- |
-| `W` `A` `S` `D` / Arrow Keys | Move tank (`Hull` steers toward movement vector) |
-| Mouse Cursor | Aim (`Turret` rotates independently in world space) |
-| Left Mouse Button | Fire primary weapon |
-| `Q`, `E`, `Space` | Activate Tank Skills (Slots 1, 2, 3) |
-| `F3` | Toggle Debug Overlay (hitboxes, orange `Hull` vector, green `Turret` vector, telemetry) |
+| Input                        | Action                                                                                  |
+| :--------------------------- | :-------------------------------------------------------------------------------------- |
+| `W` `A` `S` `D` / Arrow Keys | Move tank (`Hull` steers toward movement vector)                                        |
+| Mouse Cursor                 | Aim (`Turret` rotates independently in world space)                                     |
+| Left Mouse Button            | Fire primary weapon                                                                     |
+| `Q`, `E`, `Space`            | Activate Tank Skills (Slots 1, 2, 3)                                                    |
+| `F3`                         | Toggle Debug Overlay (hitboxes, orange `Hull` vector, green `Turret` vector, telemetry) |
 
 ## Technical Documentation (AI-First)
 

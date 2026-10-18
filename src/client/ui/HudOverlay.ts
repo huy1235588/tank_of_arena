@@ -1,15 +1,19 @@
-import type { GameEvent, PlayerSnapshot, Snapshot } from "../../shared/protocol";
+import type {
+    GameEvent,
+    PlayerSnapshot,
+    Snapshot,
+} from "../../shared/protocol";
 import type { GameContent } from "../../shared/schema/types";
 
 export interface HudConfig {
-  localPlayerId: number;
-  content: GameContent;
+    localPlayerId: number;
+    content: GameContent;
 }
 
 interface KillFeedItem {
-  id: number;
-  text: string;
-  time: number;
+    id: number;
+    text: string;
+    time: number;
 }
 
 /**
@@ -20,23 +24,23 @@ interface KillFeedItem {
  * - Màn hình đếm ngược hồi sinh khi bị tiêu diệt.
  */
 export class HudOverlay {
-  private readonly root: HTMLDivElement;
-  private readonly hpFill: HTMLDivElement;
-  private readonly hpText: HTMLDivElement;
-  private readonly reloadFill: HTMLDivElement;
-  private readonly reloadText: HTMLDivElement;
-  private readonly scoreBoard: HTMLDivElement;
-  private readonly killFeed: HTMLDivElement;
-  private readonly respawnBanner: HTMLDivElement;
-  private readonly respawnTimer: HTMLDivElement;
+    private readonly root: HTMLDivElement;
+    private readonly hpFill: HTMLDivElement;
+    private readonly hpText: HTMLDivElement;
+    private readonly reloadFill: HTMLDivElement;
+    private readonly reloadText: HTMLDivElement;
+    private readonly scoreBoard: HTMLDivElement;
+    private readonly killFeed: HTMLDivElement;
+    private readonly respawnBanner: HTMLDivElement;
+    private readonly respawnTimer: HTMLDivElement;
 
-  private killFeedItems: KillFeedItem[] = [];
-  private nextFeedId = 1;
+    private killFeedItems: KillFeedItem[] = [];
+    private nextFeedId = 1;
 
-  constructor(private readonly config: HudConfig) {
-    this.root = document.createElement("div");
-    this.root.id = "hud";
-    this.root.innerHTML = `
+    constructor(private readonly config: HudConfig) {
+        this.root = document.createElement("div");
+        this.root.id = "hud";
+        this.root.innerHTML = `
       <style>
         #hud {
           position: fixed;
@@ -194,74 +198,114 @@ export class HudOverlay {
       </div>
     `;
 
-    document.body.appendChild(this.root);
+        document.body.appendChild(this.root);
 
-    this.hpFill = this.root.querySelector("#hpFill") as HTMLDivElement;
-    this.hpText = this.root.querySelector("#hpText") as HTMLDivElement;
-    this.reloadFill = this.root.querySelector("#reloadFill") as HTMLDivElement;
-    this.reloadText = this.root.querySelector("#reloadText") as HTMLDivElement;
-    this.scoreBoard = this.root.querySelector("#scoreBoard") as HTMLDivElement;
-    this.killFeed = this.root.querySelector("#killFeed") as HTMLDivElement;
-    this.respawnBanner = this.root.querySelector("#respawnModal") as HTMLDivElement;
-    this.respawnTimer = this.root.querySelector("#respawnTimer") as HTMLDivElement;
-  }
-
-  handleEvents(events: readonly GameEvent[], players: readonly PlayerSnapshot[]): void {
-    const now = performance.now();
-    for (const e of events) {
-      if (e.type === "TankDestroyed") {
-        const victimPlayer = players.find((p) => p.playerId === e.playerId);
-        const killerPlayer = players.find((p) => p.playerId === e.byPlayerId);
-
-        const victimName = victimPlayer ? (victimPlayer.playerId === this.config.localPlayerId ? "Bạn" : `Người chơi ${victimPlayer.playerId}`) : "Xe";
-        const killerName = killerPlayer ? (killerPlayer.playerId === this.config.localPlayerId ? "Bạn" : `Người chơi ${killerPlayer.playerId}`) : "Tự nổ";
-
-        const isSelfInvolved = e.playerId === this.config.localPlayerId || e.byPlayerId === this.config.localPlayerId;
-        this.addFeedItem(`${killerName} ⚔️ ${victimName}`, isSelfInvolved, now);
-      }
-    }
-  }
-
-  update(snapshot: Snapshot): void {
-    const me = snapshot.tanks.find((t) => t.playerId === this.config.localPlayerId);
-    const myPlayer = snapshot.players.find((p) => p.playerId === this.config.localPlayerId);
-
-    // Máu và Nạp đạn
-    if (me) {
-      const ratio = Math.max(0, Math.min(1, me.hp / me.maxHp));
-      this.hpFill.style.width = `${(ratio * 100).toFixed(1)}%`;
-      this.hpFill.style.background = ratio > 0.5 ? "linear-gradient(90deg, #43a047, #66bb6a)" : ratio > 0.25 ? "linear-gradient(90deg, #fb8c00, #ffa726)" : "linear-gradient(90deg, #e53935, #ef5350)";
-      this.hpText.textContent = `${Math.ceil(me.hp)} / ${me.maxHp} HP`;
-
-      const rel = Math.max(0, Math.min(1, me.reload));
-      this.reloadFill.style.width = `${(rel * 100).toFixed(1)}%`;
-      this.reloadText.textContent = rel >= 1 ? "SẴN SÀNG" : "ĐANG NẠP...";
-      this.reloadText.style.color = rel >= 1 ? "#ffd54f" : "#90a4ae";
-    } else {
-      this.hpFill.style.width = "0%";
-      this.hpText.textContent = "0 HP";
+        this.hpFill = this.root.querySelector("#hpFill") as HTMLDivElement;
+        this.hpText = this.root.querySelector("#hpText") as HTMLDivElement;
+        this.reloadFill = this.root.querySelector(
+            "#reloadFill"
+        ) as HTMLDivElement;
+        this.reloadText = this.root.querySelector(
+            "#reloadText"
+        ) as HTMLDivElement;
+        this.scoreBoard = this.root.querySelector(
+            "#scoreBoard"
+        ) as HTMLDivElement;
+        this.killFeed = this.root.querySelector("#killFeed") as HTMLDivElement;
+        this.respawnBanner = this.root.querySelector(
+            "#respawnModal"
+        ) as HTMLDivElement;
+        this.respawnTimer = this.root.querySelector(
+            "#respawnTimer"
+        ) as HTMLDivElement;
     }
 
-    // Hiển thị hồi sinh nếu đã hy sinh
-    if (myPlayer && !myPlayer.alive && myPlayer.respawnTicks > 0) {
-      this.respawnBanner.style.display = "block";
-      const sec = (myPlayer.respawnTicks / 60).toFixed(1);
-      this.respawnTimer.textContent = `Hồi sinh trong ${sec} giây...`;
-    } else {
-      this.respawnBanner.style.display = "none";
+    handleEvents(
+        events: readonly GameEvent[],
+        players: readonly PlayerSnapshot[]
+    ): void {
+        const now = performance.now();
+        for (const e of events) {
+            if (e.type === "TankDestroyed") {
+                const victimPlayer = players.find(
+                    (p) => p.playerId === e.playerId
+                );
+                const killerPlayer = players.find(
+                    (p) => p.playerId === e.byPlayerId
+                );
+
+                const victimName = victimPlayer
+                    ? victimPlayer.playerId === this.config.localPlayerId
+                        ? "Bạn"
+                        : `Người chơi ${victimPlayer.playerId}`
+                    : "Xe";
+                const killerName = killerPlayer
+                    ? killerPlayer.playerId === this.config.localPlayerId
+                        ? "Bạn"
+                        : `Người chơi ${killerPlayer.playerId}`
+                    : "Tự nổ";
+
+                const isSelfInvolved =
+                    e.playerId === this.config.localPlayerId ||
+                    e.byPlayerId === this.config.localPlayerId;
+                this.addFeedItem(
+                    `${killerName} ⚔️ ${victimName}`,
+                    isSelfInvolved,
+                    now
+                );
+            }
+        }
     }
 
-    // Bảng điểm hai đội và K/D
-    let team1Kills = 0;
-    let team2Kills = 0;
-    for (const p of snapshot.players) {
-      if (p.team === 1) team1Kills += p.kills;
-      else if (p.team === 2) team2Kills += p.kills;
-    }
+    update(snapshot: Snapshot): void {
+        const me = snapshot.tanks.find(
+            (t) => t.playerId === this.config.localPlayerId
+        );
+        const myPlayer = snapshot.players.find(
+            (p) => p.playerId === this.config.localPlayerId
+        );
 
-    const myKills = myPlayer?.kills ?? 0;
-    const myDeaths = myPlayer?.deaths ?? 0;
-    this.scoreBoard.innerHTML = `
+        // Máu và Nạp đạn
+        if (me) {
+            const ratio = Math.max(0, Math.min(1, me.hp / me.maxHp));
+            this.hpFill.style.width = `${(ratio * 100).toFixed(1)}%`;
+            this.hpFill.style.background =
+                ratio > 0.5
+                    ? "linear-gradient(90deg, #43a047, #66bb6a)"
+                    : ratio > 0.25
+                      ? "linear-gradient(90deg, #fb8c00, #ffa726)"
+                      : "linear-gradient(90deg, #e53935, #ef5350)";
+            this.hpText.textContent = `${Math.ceil(me.hp)} / ${me.maxHp} HP`;
+
+            const rel = Math.max(0, Math.min(1, me.reload));
+            this.reloadFill.style.width = `${(rel * 100).toFixed(1)}%`;
+            this.reloadText.textContent = rel >= 1 ? "SẴN SÀNG" : "ĐANG NẠP...";
+            this.reloadText.style.color = rel >= 1 ? "#ffd54f" : "#90a4ae";
+        } else {
+            this.hpFill.style.width = "0%";
+            this.hpText.textContent = "0 HP";
+        }
+
+        // Hiển thị hồi sinh nếu đã hy sinh
+        if (myPlayer && !myPlayer.alive && myPlayer.respawnTicks > 0) {
+            this.respawnBanner.style.display = "block";
+            const sec = (myPlayer.respawnTicks / 60).toFixed(1);
+            this.respawnTimer.textContent = `Hồi sinh trong ${sec} giây...`;
+        } else {
+            this.respawnBanner.style.display = "none";
+        }
+
+        // Bảng điểm hai đội và K/D
+        let team1Kills = 0;
+        let team2Kills = 0;
+        for (const p of snapshot.players) {
+            if (p.team === 1) team1Kills += p.kills;
+            else if (p.team === 2) team2Kills += p.kills;
+        }
+
+        const myKills = myPlayer?.kills ?? 0;
+        const myDeaths = myPlayer?.deaths ?? 0;
+        this.scoreBoard.innerHTML = `
       <span class="score-ally">ĐỘI 1: ${team1Kills}</span>
       <span style="opacity: 0.4;">|</span>
       <span style="font-size: 12px; color: #cfd8dc;">K: ${myKills} &nbsp; D: ${myDeaths}</span>
@@ -269,25 +313,34 @@ export class HudOverlay {
       <span class="score-enemy">ĐỘI 2: ${team2Kills}</span>
     `;
 
-    // Cập nhật Kill Feed (tự xóa sau 4 giây)
-    const now = performance.now();
-    this.killFeedItems = this.killFeedItems.filter((item) => now - item.time < 4000);
-    this.renderKillFeed();
-  }
+        // Cập nhật Kill Feed (tự xóa sau 4 giây)
+        const now = performance.now();
+        this.killFeedItems = this.killFeedItems.filter(
+            (item) => now - item.time < 4000
+        );
+        this.renderKillFeed();
+    }
 
-  private addFeedItem(text: string, isSelf: boolean, time: number): void {
-    this.killFeedItems.push({ id: this.nextFeedId++, text: (isSelf ? "⭐ " : "") + text, time });
-    if (this.killFeedItems.length > 5) this.killFeedItems.shift();
-    this.renderKillFeed();
-  }
+    private addFeedItem(text: string, isSelf: boolean, time: number): void {
+        this.killFeedItems.push({
+            id: this.nextFeedId++,
+            text: (isSelf ? "⭐ " : "") + text,
+            time,
+        });
+        if (this.killFeedItems.length > 5) this.killFeedItems.shift();
+        this.renderKillFeed();
+    }
 
-  private renderKillFeed(): void {
-    this.killFeed.innerHTML = this.killFeedItems
-      .map((item) => `<div class="feed-item ${item.text.includes("Bạn") ? "feed-self" : ""}">${item.text}</div>`)
-      .join("");
-  }
+    private renderKillFeed(): void {
+        this.killFeed.innerHTML = this.killFeedItems
+            .map(
+                (item) =>
+                    `<div class="feed-item ${item.text.includes("Bạn") ? "feed-self" : ""}">${item.text}</div>`
+            )
+            .join("");
+    }
 
-  destroy(): void {
-    this.root.remove();
-  }
+    destroy(): void {
+        this.root.remove();
+    }
 }

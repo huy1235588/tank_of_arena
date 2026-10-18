@@ -12,6 +12,7 @@ Establish the deterministic simulation harness (`STEP = 1 / 60`s), the `FixedSte
 **Status:** `completed`
 
 ### Acceptance Criteria
+
 - [x] `Rng(seed)` produces identical floating-point sequences in `[0, 1)` across repeated runs with the same seed and distinct sequences for different seeds.
 - [x] `FixedStepper.advance(dt, onStep)` invokes `onStep` the exact number of `STEP = 1/60` intervals accumulated, clamps single frames above `0.25s`, and returns normalized `alpha` $\in [0, 1]$.
 - [x] `tests/sim-purity.test.ts` scans all `.ts` files under `src/sim/` and `src/shared/` and fails if forbidden tokens (`pixi.js`, `window`, `document`, `HTMLElement`, `Math.random`, `Date.now`, `performance.now`) appear.
@@ -28,6 +29,7 @@ Implement the canonical world-space angle helpers (`wrap`, `angleDiff`, `turnTow
 **Status:** `completed`
 
 ### Acceptance Criteria
+
 - [x] `wrap(angle)` normalizes any radian value into $(-\pi, \pi]$, and `angleDiff(a, b)` returns the shortest signed arc across the $\pm\pi$ discontinuity without spinning $350^\circ$.
 - [x] `inputSystem` clamps diagonal movement vectors `(moveX, moveY)` to magnitude $\le 1.0$.
 - [x] Rotating the `Hull` via WASD never alters `turret.angle`; `turret.angle` converges toward `atan2(aimY - y, aimX - x)` at `turretTurnRate * STEP`.
@@ -46,6 +48,7 @@ Wire `GameLoop` (`requestAnimationFrame` + `FixedStepper`) to a read-only PixiJS
 **Status:** `completed`
 
 ### Acceptance Criteria
+
 - [x] In `TankView`, `view.hull` and `view.turret` are sibling children of `view.root` (`view.root.rotation === 0`), preventing hull rotation from dragging the turret sprite.
 - [x] Angular interpolation across $-\pi \leftrightarrow +\pi$ uses `wrap(prev + angleDiff(prev, curr) * alpha)` with zero visual snapping.
 - [x] Pressing `F3` toggles hitbox circles (`tank.radius`), orange hull heading lines, green turret aim lines, and live telemetry (`FPS`, `tick`, tank coordinates).

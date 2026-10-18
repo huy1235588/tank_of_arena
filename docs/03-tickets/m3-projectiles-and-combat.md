@@ -12,6 +12,7 @@ Implement `weaponSystem` so holding `fire` when `cooldownTicks === 0` spawns a p
 **Status:** `completed`
 
 ### Acceptance Criteria
+
 - [x] Projectile spawn coordinates equal `pos + rotate(muzzleOffset, turret.angle)`, completely independent of `hull.angle`.
 - [x] `fireInterval` seconds are converted to integer `intervalTicks` at tank spawn; firing sets `cooldownTicks = intervalTicks` and decrements by `1` per tick.
 - [x] Weapon spread uses `rng.range(-spreadRad, +spreadRad)` and emits a `ProjectileFired` event.
@@ -28,6 +29,7 @@ Advance projectiles each tick using continuous swept collision (`sweepProjectile
 **Status:** `completed`
 
 ### Acceptance Criteria
+
 - [x] High-speed projectiles (`speed = 50+` tiles/sec) never tunnel through a 1-tile thick wall or tank hitbox.
 - [x] When both a wall and an enemy tank lie along the projectile segment, the smaller $t$ wins (`wall.t <= tankT` blocks shots to tanks behind cover).
 - [x] Hitting a tile with `hp` decrements its HP by `wallDamage`, emits `TileDamaged`, and when `hp === 0`, replaces the tile with `becomesOnDestroy` (`"floor"`) and emits `TileChanged`.
@@ -45,6 +47,7 @@ Implement armor damage reduction (`dmg * 100 / (100 + armor)`), end-of-tick deat
 **Status:** `completed`
 
 ### Acceptance Criteria
+
 - [x] Damage dealt to a tank with `armor` equals `damage * 100 / (100 + armor)` and is `0` while `invulnTicks > 0`.
 - [x] Destroying an enemy tank increments the attacker's `kills` and the victim's `deaths`, emits `TankDestroyed`, and starts a `180`-tick respawn countdown.
 - [x] Upon respawn, `pickSpawnPoint` selects the first allied spawn point not occupied by another living tank and grants `90` ticks of spawn invulnerability.
@@ -61,5 +64,6 @@ Consume `sim.drainEvents()` in `Renderer.handleEvents()` to render muzzle flashe
 **Status:** `completed`
 
 ### Acceptance Criteria
+
 - [x] `ProjectileFired`, `ProjectileHit`, `TankDamaged`, `TankDestroyed`, `TileDamaged`, and `TileChanged` trigger corresponding visual particles and procedural Web Audio cues without touching `src/sim/`.
 - [x] Damaged `brick` tiles display progressive crack lines on `wallLayer`, and destroyed bricks immediately clear their wall geometry when `TileChanged` fires.

@@ -13,7 +13,7 @@ export const angleDiff = (a: number, b: number): number => wrap(b - a);
 
 /** Xoay a về phía b theo đường ngắn nhất, không quá maxStep (radian). */
 export const turnToward = (a: number, b: number, maxStep: number): number => {
-  const d = angleDiff(a, b);
-  const step = Math.max(-maxStep, Math.min(maxStep, d));
-  return wrap(a + step);
+    const d = angleDiff(a, b);
+    const step = Math.max(-maxStep, Math.min(maxStep, d));
+    return wrap(a + step);
 };

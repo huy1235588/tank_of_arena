@@ -89,10 +89,10 @@ Implement the `dash`, `shield`, and `stealth` handlers in `EFFECT_REGISTRY` and 
 
 ---
 
-## T17: Multi-Tank Roster (4+ Archetypes), Projectile `onHit`/`onExpire` Effects, and Skill Cooldown HUD
+## T17: Multi-Tank Roster (4+ Starter Archetypes → 10-Tank Roster), Projectile `onHit`/`onExpire` Effects, and Skill Cooldown HUD
 
 **What to build:**
-Support `onHit` and `onExpire` effect chains on `ProjectileDef` (e.g., cluster bombs that split into radial shrapnel upon expiration), author at least 4 distinct tanks in `data/tanks/*.json` (`striker`, `ghost`, `titan`, `ricochet`) with unique skills, and display live skill cooldown indicators (`Q`, `E`, `Space`) + active shield/stealth visuals in `HudOverlay` and `Renderer`.
+Support `onHit` and `onExpire` effect chains on `ProjectileDef` (e.g., cluster/venom/magma bombs that trigger area/zone/split effects upon impact or expiration), author at least 4 distinct tanks across all 4 roles (`assassin`, `sniper`, `tank`, `support` — scaling from the starter archetypes to the full 10-tank roster in [`docs/02-specs/roster/`](../02-specs/roster/00-overview-and-effects.md): `razor_wasp`, `rift_stalker`, `storm_skiff`, `prism_lancer`, `graviton_mortar`, `ion_railgun`, `iron_bastion`, `magma_juggernaut`, `lumen_weaver`, `scrap_engineer`), and display live skill cooldown indicators (`Q`, `E`, `R`/`Space`) + active shield/stealth/status visuals in `HudOverlay` and `Renderer` per [`06-ui-hud-and-ux.md`](../02-specs/06-ui-hud-and-ux.md).
 
 **Blocked by:** `T13`, `T14`, `T16`
 
@@ -101,6 +101,6 @@ Support `onHit` and `onExpire` effect chains on `ProjectileDef` (e.g., cluster b
 ### Acceptance Criteria
 
 - [ ] When a projectile with `onExpire` or `onHit` effects terminates, `executeEffects` runs at the projectile's impact/expiration coordinates `(x, y)`.
-- [ ] At least 4 playable tanks exist in `data/tanks/*.json` covering all 4 roles (`tank`, `assassin`, `support`, `sniper`).
-- [ ] Adding a 5th tank JSON file in `data/tanks/` works end-to-end in the game and tests with **zero changes to `src/`**.
-- [ ] `TankSnapshot` exposes per-slot skill cooldown progress (`[q, e, space]` in `[0, 1]`), and `HudOverlay` renders the 3 skill slots with live cooldown timers.
+- [ ] At least 4 playable tanks exist in `data/tanks/*.json` covering all 4 roles (`tank`, `assassin`, `support`, `sniper`), following the schemas and balance bands in [`docs/02-specs/roster/00-overview-and-effects.md`](../02-specs/roster/00-overview-and-effects.md).
+- [ ] Adding a new tank JSON file in `data/tanks/` works end-to-end in the game and tests with **zero changes to `src/`**.
+- [ ] `TankSnapshot` exposes per-slot skill cooldown progress (`[q, e, r]` in `[0, 1]`), and `HudOverlay` renders the 3 skill slots with live cooldown timers.

@@ -21,7 +21,7 @@ Add match lifecycle rules to `Simulation`: a pre-match countdown (`COUNTDOWN_TIC
 ## T24: Client Application State Machine (`Menu → TankSelect → Match → Result`)
 
 **What to build:**
-Implement the browser UI flow in `src/client/ui/` allowing players to choose their tank archetype (`TankDef` preview with stat bars and skill descriptions), arena map (`MapDef`), mode (1v1, 1v3 Free-for-All, or 3v3 Team Deathmatch), and bot difficulty before launching a match, and transition to a `Result` scoreboard screen with `Play Again` and `Change Tank` buttons when the match ends.
+Implement the browser UI flow in `src/client/ui/` per [`06-ui-hud-and-ux.md`](../02-specs/06-ui-hud-and-ux.md) allowing players to choose their tank archetype (`TankDef` preview with role filter tabs, stat bars, and skill descriptions), arena map (`MapDef`), mode (1v1, 1v3 Free-for-All, or 3v3 Team Deathmatch), and bot difficulty before launching a match, and transition to a `Result` scoreboard screen with `Play Again` and `Change Tank` buttons when the match ends.
 
 **Blocked by:** `T23`
 
@@ -34,10 +34,10 @@ Implement the browser UI flow in `src/client/ui/` allowing players to choose the
 
 ---
 
-## T25: Arena Polish: Camera Screen Shake, Kill Feed, Minimap, and 3 Arena Maps
+## T25: Arena Polish: Camera Screen Shake, Kill Feed, Minimap, Procedural Audio, and Arena Maps
 
 **What to build:**
-Add combat feel and spatial awareness features to `src/client/`: trauma-based camera screen shake on `TankDamaged` (local player) and `TankDestroyed`, a live top-right Kill Feed (`Killer [Tank]  eliminated Victim [Tank]`), a corner Minimap showing walls, allies, and visible enemies, and author 2 additional balanced maps in `data/maps/` (`crossfire.json`, `fortress.json`).
+Add combat feel and spatial awareness features to `src/client/` per [`06-ui-hud-and-ux.md`](../02-specs/06-ui-hud-and-ux.md), [`07-procedural-audio.md`](../02-specs/07-procedural-audio.md), and [`docs/02-specs/maps/`](../02-specs/maps/00-map-design-and-tiles.md): trauma-based camera screen shake on `TankDamaged` (local player) and `TankDestroyed`, a live top-right Kill Feed, a corner Minimap showing walls, allies, and visible enemies, extended terrain tiles in `data/tiles.json` (`water`, `reinforced_brick`, `mud`, `boost_pad`), and the competitive arena maps in `data/maps/` (`arena_01.json`, `crossfire.json`, `fortress.json`, plus optional tactical maps `whispering_marsh.json` and `molten_foundry.json`).
 
 **Blocked by:** `T24`
 
@@ -47,7 +47,7 @@ Add combat feel and spatial awareness features to `src/client/`: trauma-based ca
 
 - [ ] Camera screen shake decays smoothly to zero and never alters world-space mouse aiming (`screenToWorld` uses the unshaken camera center or accounts for offset cleanly).
 - [ ] Minimap only renders enemy tanks that are visible to the local player's team (`ADR 007`).
-- [ ] All 3 maps (`arena_01`, `crossfire`, `fortress`) pass `validateMapDef` and support 3v3 spawns.
+- [ ] All arena maps (`arena_01`, `crossfire`, `fortress`, and extended maps) pass `validateMapDef` and support 3v3 spawns.
 
 ---
 

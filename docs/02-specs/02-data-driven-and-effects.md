@@ -158,3 +158,20 @@ When a tank activates skill slot $k \in \{0, 1, 2\}$ (`SKILL_Q`, `SKILL_E`, `SKI
 - **`stealth`:** Adds `StealthStatus` (`remainingTicks`, `breakOnFire`). While active, enemy teams and AI bots cannot detect the tank outside `REVEAL_RADIUS` (`2.5` tiles). If `breakOnFire === true`, firing in `weaponSystem` immediately removes `StealthStatus`.
 - **`buff`:** Multiplies the target stat (`moveSpeed`, `fireRate`, or `armor`) for `remainingTicks`.
 - **`heal`:** Immediately restores `min(maxHp - hp, amount)` to `Health.hp`.
+
+---
+
+## 4. Full 10-Tank Roster & 5-Arena Content Extensions
+
+While Section 1–3 above define the **Milestone M4 Core Schema** (6 foundational effects), the complete game content scales declaratively across the following specifications:
+
+1. **10-Tank Roster & 20-Effect `EFFECT_REGISTRY` ([`docs/02-specs/roster/00-overview-and-effects.md`](./roster/00-overview-and-effects.md)):**
+    - Expands `EffectDef` to 20 composable atomic handlers (`damage`, `heal`, `shield`, `apply_status`, `remove_status`, `consume_status`, `reset_cooldown`, `dash`, `blink`, `displace`, `area`, `spawn_projectile`, `beam`, `chain`, `tether`, `spawn_zone`, `spawn_entity`, `spawn_wall`, `repeat`, `conditional`) and 18 `StatusId`s (`venom`, `burn`, `static`, `marked`, `bulwark_mode`, `siege_mode`, `tempest_form`, `overclocked`, etc.).
+    - Role specifications:
+        - **Assassins (`razor_wasp`, `rift_stalker`, `storm_skiff`):** [`roster/01-assassins.md`](./roster/01-assassins.md)
+        - **Snipers (`prism_lancer`, `graviton_mortar`, `ion_railgun`):** [`roster/02-snipers.md`](./roster/02-snipers.md)
+        - **Heavy Tanks (`iron_bastion`, `magma_juggernaut`):** [`roster/03-tanks.md`](./roster/03-tanks.md)
+        - **Supports (`lumen_weaver`, `scrap_engineer`):** [`roster/04-supports.md`](./roster/04-supports.md)
+2. **8 Terrain Tiles & 5 Symmetrical Arenas ([`docs/02-specs/maps/00-map-design-and-tiles.md`](./maps/00-map-design-and-tiles.md)):**
+    - Uses `TileDef` to define `floor` (`.`), `steel` (`#`), `brick` (`B`), `bush` (`g`), `water` (`~`), `reinforced_brick` (`R`), `mud` (`m`), and `boost_pad` (`=`).
+    - Arena layouts: [`maps/01-core-arenas.md`](./maps/01-core-arenas.md) (`arena_01`, `crossfire`, `fortress`) and [`maps/02-tactical-arenas.md`](./maps/02-tactical-arenas.md) (`whispering_marsh`, `molten_foundry`).

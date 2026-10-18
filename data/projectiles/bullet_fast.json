@@ -1,0 +1,9 @@
+{
+  "id": "bullet_fast",
+  "speed": 22,
+  "damage": 18,
+  "range": 10,
+  "radius": 0.1,
+  "wallDamage": 1,
+  "color": "#b388ff"
+}

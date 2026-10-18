@@ -1,0 +1,21 @@
+{
+  "id": "striker",
+  "name": "Striker",
+  "role": "tank",
+  "stats": {
+    "maxHp": 120,
+    "armor": 10,
+    "moveSpeed": 5,
+    "hullTurnRate": 6,
+    "turretTurnRate": 14,
+    "radius": 0.5
+  },
+  "weapon": {
+    "projectile": "bullet_basic",
+    "fireInterval": 0.6,
+    "muzzleOffset": [0.8, 0],
+    "spreadDeg": 1.5
+  },
+  "skills": ["shield_basic", "dash_short"],
+  "sprite": { "hull": "striker_hull", "turret": "striker_turret" }
+}

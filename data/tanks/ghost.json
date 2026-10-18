@@ -1,0 +1,21 @@
+{
+  "id": "ghost",
+  "name": "Bóng ma",
+  "role": "assassin",
+  "stats": {
+    "maxHp": 70,
+    "armor": 5,
+    "moveSpeed": 7.5,
+    "hullTurnRate": 7,
+    "turretTurnRate": 12,
+    "radius": 0.45
+  },
+  "weapon": {
+    "projectile": "bullet_fast",
+    "fireInterval": 0.45,
+    "muzzleOffset": [0.7, 0],
+    "spreadDeg": 3
+  },
+  "skills": ["stealth_3s", "dash_short"],
+  "sprite": { "hull": "ghost_hull", "turret": "ghost_turret" }
+}

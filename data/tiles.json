@@ -1,0 +1,6 @@
+[
+  { "id": "floor", "glyph": ".", "blocksMove": false, "blocksProjectile": false, "color": "#1d222a" },
+  { "id": "steel", "glyph": "#", "blocksMove": true, "blocksProjectile": true, "color": "#5b6472" },
+  { "id": "brick", "glyph": "B", "blocksMove": true, "blocksProjectile": true, "hp": 3, "becomesOnDestroy": "floor", "color": "#a0522d" },
+  { "id": "bush", "glyph": "g", "blocksMove": false, "blocksProjectile": false, "hidesUnits": true, "color": "#2e7d32" }
+]

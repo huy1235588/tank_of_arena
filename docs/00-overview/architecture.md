@@ -84,16 +84,15 @@ tank_of_arena/
 │  │  ├─ 005-composable-effect-registry.md
 │  │  ├─ 006-staggered-ai-input-provider.md
 │  │  └─ 007-authoritative-visibility-and-stealth.md
-│  ├─ 01-simulation/
-│  │  └─ ecs-and-physics.md         # World, Components, Dual-Pivot, sliding collisions & DDA raycast
-│  ├─ 02-data-driven/
-│  │  └─ content-and-effects.md     # Data schemas, EFFECT_REGISTRY & content extension rules
-│  ├─ 03-rendering/
-│  │  └─ pixi-and-vfx.md            # Alpha interpolation, generateTexture baking, Layering, VfxPool
-│  ├─ 04-ai/
-│  │  └─ bot-brain.md               # A* Pathfinding, tactical FSM, CPA dodging, AI Tick Staggering
-│  └─ 05-roadmap/
-│     └─ milestones.md              # 7-milestone roadmap (M1 → M7) and acceptance criteria
+│  ├─ 02-specs/                     # Detailed subsystem specifications
+│  │  ├─ 01-ecs-and-physics.md      # World, Components, Dual-Pivot, sliding collisions & DDA raycast
+│  │  ├─ 02-data-driven-and-effects.md # Data schemas, EFFECT_REGISTRY & content validation rules
+│  │  ├─ 03-rendering-and-vfx.md    # Alpha interpolation, generateTexture baking, Layering, VfxPool
+│  │  ├─ 04-ai-bot-brain.md         # A* Pathfinding, tactical FSM, CPA dodging, AI Tick Staggering
+│  │  └─ 05-match-lifecycle-and-network.md # Spawning, MatchState, Replay format & Transport/Prediction
+│  └─ 03-tickets/                   # Tracer-Bullet vertical slice tickets (T01 → T30) with DAG & DoD
+│     ├─ 00-index.md                # Master dependency graph (DAG) & active frontier
+│     └─ m1..m7-*.md                # Per-milestone vertical slice tickets & acceptance criteria
 ├─ src/
 │  ├─ shared/                       # SHARED CLIENT & SIM (Pure TS, environment-agnostic)
 │  │  ├─ constants.ts               # TICK_RATE (60), STEP (1/60), RESPAWN_TICKS, SKILL bitmasks
